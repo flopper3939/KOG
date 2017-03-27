@@ -50,7 +50,7 @@ if (isset($_SESSION['login_error'])) {
 		<?php
 		unset($_SESSION['login_error']);
 	}
-	if ($_SESSION['login_error'] == 2) {
+	elseif ($_SESSION['login_error'] == 2) {
 	?>
 	<script>
 	swal("Password updated", "Wrong email or password", "success");

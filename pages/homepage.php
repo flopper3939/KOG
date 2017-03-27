@@ -1,1 +1,3 @@
-<h1>Velkommen tilbage <?php echo context::getContext()->student->first_name; ?></h1>
+<div style="background-color: red; width: 100%; height: 100%;">
+
+</div>

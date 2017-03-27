@@ -1,5 +1,4 @@
 <?php 
-$context = context::getContext();
 $page = tools::getValue('page');
 if ($page == '')
 	$title = 'Homepage';
@@ -39,6 +38,9 @@ if (tools::getValue('tk') != '')
 
 		<!-- Menu Theme -->
 		<link rel="stylesheet" href="/lib/sidebar/sidebar-collapse.css">
+
+		<!-- Override CSS -->
+		<link rel="stylesheet" href="/css/override.css">
 
 		<title><?php echo $title;?></title>
 	</head>
@@ -90,24 +92,23 @@ unset($_SESSION['CTRF_ERROR']);
 		}
 		if ($context->logged_in) {
 		?>
-
-			<script type="text/javascript">
-				$(function () {
-					var links = $('.sidebar-links > div');
-					links.on('click', function () {
-						links.removeClass('selected');
-						$(this).addClass('selected');
-					});
+		<script type="text/javascript">
+			$(function () {
+				var links = $('.sidebar-links > div');
+				links.on('click', function () {
+					links.removeClass('selected');
+					$(this).addClass('selected');
 				});
+			});
 		<?php 
 			$page = str_replace('.php', '', $page);
 			$page = str_replace('admin/', 'admin', $page);
 			foreach ($menu as $key => $value) {
 				foreach ($value as $value1) {
 					if ($value1['pagelink'] == $page) {
-						echo '		$("a:contains(\''.$key.'\')").parent().addClass("selected");
-				</script>
-			';
+						echo '	$("a:contains(\''.$key.'\')").parent().addClass("selected");
+			</script>
+		';
 					}
 				}
 			}

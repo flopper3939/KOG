@@ -3,6 +3,7 @@
 abstract class objectModel 
 {
 	public $structure;
+	public $inDB;
 	public $date_upd;
 	public $date_add;
 
@@ -20,9 +21,11 @@ abstract class objectModel
 			foreach ($result[0] as $key => $row) {
 				$this->$key = $row;
 			}
+			$this->inDB = true;
 		}
 		else {
 			$this->id = $_id;
+			$this->inDB = false;
 		}
 	}
 	function save() {
@@ -47,6 +50,7 @@ abstract class objectModel
 					array_push($params, $this->$field);
 			}
 			$this->$tmp = Database::insert($sql, $params);
+			$this->inDB = true;
 		}
 		else {
 			$sql = 'UPDATE '._SQL_PREFIX_.get_class($this).' SET ';

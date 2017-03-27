@@ -20,5 +20,11 @@ class student extends objectModel
 	public $last_name;
 	public $education;
 	public $active;
+	public function updatePassword($password) {
+		$password_hash = password_hash($password, PASSWORD_DEFAULT);
+		$sql = "UPDATE "._SQL_PREFIX_."logins SET password=? WHERE id_student = ?";
+		$params = array($password_hash, $this->id_student);
+		Database::update($sql, $params);
+	}
 }
 ?>

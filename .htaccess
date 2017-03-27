@@ -1,3 +1,4 @@
 RewriteEngine on
 RewriteRule ^page/([^/]*)?$ /index.php?page=$1 [NC,L]
 RewriteRule ^passwordReset/([^/]*)?$ /index.php?page=passwordReset&tk=$1 [NC,L]
+RewriteRule ^page/profile/([^/]*)?$ /index.php?page=profile&id=$1 [NC,L]

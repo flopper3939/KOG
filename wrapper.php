@@ -20,7 +20,7 @@ require_once('context.php');
 require_once('student.php');
 require_once('login.php');
 CSRF::cleanUpTokens();
-
+$context = context::getContext();
 
 
 ?>

@@ -8,7 +8,7 @@ $menu = array
 	),
 	'Elev' => array 
 	(
-		array('pagename' => 'Min Side', 'pagelink' => 'mysite')
+		array('pagename' => 'Min Side', 'pagelink' => 'profile')
 	),
 	'Fravaer' => array 
 	(

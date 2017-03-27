@@ -3,9 +3,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/wrapper.php');
 $CSRF = CSRF::checkToken($_POST);
 if ($CSRF != 0) {
 	// Previous page
-	header('Location: '._HOST_.'/page/mysite' + $CSRF);
+	header('Location: '._HOST_.'/page/mysite');
 }
-echo $CSRF;
 $firstname = tools::getValue('firstname');
 $lastname = tools::getValue('lastname');
 $id = tools::getValue('student_id');

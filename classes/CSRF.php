@@ -6,7 +6,7 @@ class CSRF {
 		if (isset($_SESSION['tokens'])) {
 			$toRemove = array();
 			foreach ($_SESSION['tokens'] as $key => $value) {
-				if (time() - $value['time'] > 1200) {
+				if (time() - $value['time'] > $GLOBALS['config']['CSRF']['Token_timeout']) {
 					array_push($toRemove, $key);
 				}
 			}
@@ -31,6 +31,21 @@ class CSRF {
 		}
 		$html = '<input type="hidden" name="token' . $id . '" value="' . $newToken . '">';
 		return $html;
+	}
+	public static function getAjaxToken() {
+		$newToken = bin2hex(random_bytes(32));
+		$tokenArray = array('token' => $newToken, 'time' => time());
+		if (isset($_SESSION['tokens'])) {
+			$id = array_push($_SESSION['tokens'], $tokenArray);
+			$id -= 1;
+		}
+		else {
+			$_SESSION['tokens'] = array($tokenArray);
+			$id = 0;
+		}
+		$js = "token" . $id . ":'" . $newToken . "'";
+		return $js;
+
 	}
 	public static function checkToken($post) {
 		foreach($post as $key => $value) {
