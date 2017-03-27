@@ -42,6 +42,10 @@ if (tools::getValue('tk') != '')
 		<!-- Override CSS -->
 		<link rel="stylesheet" href="/css/override.css">
 
+		<!-- Pagenation -->
+		<script type="text/javascript" src="/lib/Pagination/jquery.simplePagination.js"></script>
+		<link rel="stylesheet" href="/lib/Pagination/simplePagination.css">
+
 		<title><?php echo $title;?></title>
 	</head>
 	<body><?php

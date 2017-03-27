@@ -8,9 +8,10 @@ $menu = array
 	),
 	'Elev' => array 
 	(
-		array('pagename' => 'Min Side', 'pagelink' => 'profile')
+		array('pagename' => 'Min Side', 'pagelink' => 'profile'),
+		array('pagename' => 'Søg efter elever', 'pagelink' => 'searchStudents')
 	),
-	'Fravaer' => array 
+	'Fravær' => array 
 	(
 		array('pagename' => 'Mit flex', 'pagelink' => 'flex'),
 		array('pagename' => 'Bibliotek aftaler', 'pagelink' => 'libary'),

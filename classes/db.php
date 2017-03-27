@@ -7,8 +7,9 @@ class Database {
     private function __construct() {
     	try 
 		{
-		    $this->connection = new PDO('mysql:host='.$GLOBALS['config']['sql']['host'].';dbname='.$GLOBALS['config']['sql']['dbname'].';', $GLOBALS['config']['sql']['username'], $GLOBALS['config']['sql']['password']);
+		    $this->connection = new PDO('mysql:host='.$GLOBALS['config']['sql']['host'].';dbname='.$GLOBALS['config']['sql']['dbname'].';', $GLOBALS['config']['sql']['username'], $GLOBALS['config']['sql']['password'], array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8") );
 		    $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		    $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false );
 		}
         catch (PDOException $e)
 		{
@@ -29,7 +30,10 @@ class Database {
 	public static function select($sql, $params) {
 		$stmt = self::getConnection()->prepare($sql);
 		foreach ($params as $key => $value) {
-			$stmt->bindParam($key + 1, (!empty($value) ? $value : ""));
+			if (gettype($value) == "string")
+				$stmt->bindParam($key + 1, (!empty($value) ? $value : ""));
+			else
+				$stmt->bindParam($key + 1, (!empty($value) ? $value : ""), PDO::PARAM_INT);
 		}
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
