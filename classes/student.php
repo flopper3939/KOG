@@ -10,7 +10,7 @@ class student extends objectModel
 				'birth',
 				'first_name',
 				'last_name',
-				'education',
+				'id_education',
 				'active'
 			)
 		);

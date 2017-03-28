@@ -1,9 +1,10 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'].'/wrapper.php');
 $CSRF = CSRF::checkToken($_POST);
-if ($CSRF != 0) {
+if ($CSRF != 1) {
 	// Previous page
-	header('Location: '._HOST_.'/page/mysite');
+	header('Location: '._HOST_.'/page/profile');
+	die();
 }
 $firstname = tools::getValue('firstname');
 $lastname = tools::getValue('lastname');
@@ -13,7 +14,7 @@ $stud = new student($id);
 $stud->first_name = $firstname;
 $stud->last_name = $lastname;
 $stud->save();
-header('Location: '._HOST_.'/page/mysite');
+header('Location: '._HOST_.'/page/profile');
 
 
 

@@ -109,14 +109,16 @@ unset($_SESSION['CTRF_ERROR']);
 			$page = str_replace('admin/', 'admin', $page);
 			foreach ($menu as $key => $value) {
 				foreach ($value as $value1) {
+
 					if ($value1['pagelink'] == $page) {
 						echo '	$("a:contains(\''.$key.'\')").parent().addClass("selected");
-			</script>
+			
 		';
 					}
 				}
 			}
 		}
+		echo "</script>";
 		if ($context->logged_in)
 			echo '</div>
 ';

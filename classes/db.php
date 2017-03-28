@@ -30,10 +30,12 @@ class Database {
 	public static function select($sql, $params) {
 		$stmt = self::getConnection()->prepare($sql);
 		foreach ($params as $key => $value) {
-			if (gettype($value) == "string")
-				$stmt->bindParam($key + 1, (!empty($value) ? $value : ""));
-			else
-				$stmt->bindParam($key + 1, (!empty($value) ? $value : ""), PDO::PARAM_INT);
+			if (is_null($value))
+				$value = '';
+			if (gettype($value) == "string") 
+				$stmt->bindParam($key + 1, $params[$key], PDO::PARAM_STR);
+			else 
+				$stmt->bindParam($key + 1, $params[$key], PDO::PARAM_INT);
 		}
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -41,7 +43,12 @@ class Database {
 	public static function insert($sql, $params) {
 		$stmt = self::getConnection()->prepare($sql);
 		foreach ($params as $key => $value) {
-			$stmt->bindParam($key + 1, (!empty($value) ? $value : ""));
+			if (empty($value))
+				$value = '';
+			if (gettype($value) == "string")
+				$stmt->bindParam($key + 1, $params[$key], PDO::PARAM_STR);
+			else
+				$stmt->bindParam($key + 1, $params[$key], PDO::PARAM_INT);
 		}
 		$stmt->execute();
 		return self::getConnection()->lastInsertId();
@@ -49,7 +56,12 @@ class Database {
 	public static function update($sql, $params) {
 		$stmt = self::getConnection()->prepare($sql);
 		foreach ($params as $key => $value) {
-			$stmt->bindParam($key + 1, (!empty($value) ? $value : ""));
+			if (empty($value))
+				$value = '';
+			if (gettype($value) == "string")
+				$stmt->bindParam($key + 1, $params[$key], PDO::PARAM_STR);
+			else
+				$stmt->bindParam($key + 1, $params[$key], PDO::PARAM_INT);
 		}
 		$stmt->execute();
 	}

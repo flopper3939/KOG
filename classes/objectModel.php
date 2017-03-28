@@ -38,11 +38,11 @@ abstract class objectModel
 				if ($field != $tmp)
 					$sql .= $field . ', ';
 			}
-			$sql .= 'date_upd, date_add) VALUES (';
+			$sql .= ') VALUES (';
 			for($i = 0;$i < count($this->structure['fields']) - 1; $i++) {
 				$sql .= '?, ';
 			}
-			$sql .= 'NOW(), NOW())';
+			$sql .= ')';
 
 			$params = array();
 			foreach ($this->structure['fields'] as $key => $field) {
@@ -56,10 +56,11 @@ abstract class objectModel
 			$sql = 'UPDATE '._SQL_PREFIX_.get_class($this).' SET ';
 
 			foreach ($this->structure['fields'] as $key => $field) {
-				if ($field != $tmp)
+				if ($field != $tmp) 
 					$sql .= $field . '=?, ';
 			}
-			$sql .= 'date_upd=NOW() WHERE '.$tmp.'=?';
+			$sql = str_lreplace(',', '', $sql);
+			$sql .= ' WHERE '.$tmp.'=?';
 
 			$params = array();
 			foreach ($this->structure['fields'] as $key => $field) {
@@ -76,11 +77,6 @@ abstract class objectModel
 	public function setActive() {
 		Database::update('UPDATE '._SQL_PREFIX_.get_class($this).' SET active=1 WHERE '.$this->structure['id'].'=?', array($this->id));
 	}
-	public function setUpdDate() {
-		Database::update('UPDATE '._SQL_PREFIX_.get_class($this).' SET date_upd=NOW() WHERE '.$this->structure['id'].'=?', array($this->id));
-	}
-	public function setAddDate() {
-		Database::update('UPDATE '._SQL_PREFIX_.get_class($this).' SET date_add=NOW() WHERE '.$this->structure['id'].'=?', array($this->id));
-	}
+
 }
 ?>

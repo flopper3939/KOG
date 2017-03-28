@@ -107,6 +107,7 @@ $(".update-password").click(function(){
 <?php
 }
 else {
+$education = new education($student->id_education);
 ?>
           <div class="col-lg-12">
           <div class="container">
@@ -127,7 +128,7 @@ else {
                           <tbody>
                             <tr>
                               <td>Uddanelse</td>
-                              <td><?php echo $student->education; ?></td>
+                              <td><?php echo $education->education_name; ?></td>
                             </tr>
                             <tr>
                               <td>Team</td>

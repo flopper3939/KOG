@@ -19,6 +19,7 @@ require_once('objectModel.php');
 require_once('context.php');
 require_once('student.php');
 require_once('login.php');
+require_once('education.php');
 CSRF::cleanUpTokens();
 $context = context::getContext();
 
