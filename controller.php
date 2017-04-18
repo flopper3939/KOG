@@ -76,10 +76,15 @@ unset($_SESSION['CTRF_ERROR']);
 		// REQUIRE LOGIN
 
 		if (!$context->logged_in) {
-			if (tools::getValue('page') == "")
-				require_once('pages/login.php');
-			elseif (tools::getValue('page') == "passwordReset")
-				require_once('pages/forgotPassword.php');
+			if (tools::getValue('page') == "stateChanger") {
+				require_once('pages/stateChanger.php');
+			}
+			else {
+				if (tools::getValue('page') == "")
+					require_once('pages/login.php');
+				elseif (tools::getValue('page') == "passwordReset")
+					require_once('pages/forgotPassword.php');
+			}
 		}
 		else {
 

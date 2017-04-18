@@ -32,23 +32,23 @@ $html .= '
 
 <table class="table table-striped table-responsive">
 	<tr>
-		<th style="text-align: center;">Image</th>
-		<th style="text-align: center;"">Name</th>
-		<th style="text-align: center;">Education</th>
-		<th style="text-align: center;">Team</th>
-		<th style="text-align: center;">Go to profile</th>
+		<th>Image</th>
+		<th>Name</th>
+		<th>Education</th>
+		<th>Team</th>
+		<th>Go to profile</th>
 	</tr>'."\r\n";
 foreach ($result as $value) 
 {
 	$html .= 
 '	<tr>
-		<td style="vertical-align: middle;text-align: center;">
+		<td style="vertical-align: middle;">
 			<img style="width:100px;" src="'._IMG_PATH_.'students/'.$value['id_student'].'.jpg">
 		</td>
-		<td style="vertical-align: middle;text-align: center;">'.$value['first_name']. ' ' . $value['last_name'] . '</td>
-		<td style="vertical-align: middle;text-align: center;">'.$value['education_name'].'</td>
-		<td style="vertical-align: middle;text-align: center;"><b>'.($value['team_name'] ? $value['team_name'] : "No team defined").'</b></td>
-		<td style="vertical-align: middle;text-align: center;">
+		<td style="vertical-align: middle;">'.$value['first_name']. ' ' . $value['last_name'] . '</td>
+		<td style="vertical-align: middle;">'.$value['education_name'].'</td>
+		<td style="vertical-align: middle;"><b>'.$value['team_name'].'</b></td>
+		<td style="vertical-align: middle;">
 			<a href="'._HOST_.'/page/profile/'.$value['id_student'].'" class="btn btn-primary">Go to profile</a>
 		</td>
 	</tr>'."\r\n";

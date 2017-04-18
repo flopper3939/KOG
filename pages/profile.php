@@ -141,7 +141,7 @@ $education = new education($student->id_education);
                             <tr>
                               <td>Email</td>
                               <td>
-                                <a href="mailto:placeholder@placeholder.placeholder">placeholder</a>
+                                <a href="mailto:<?php echo $student->email;?>"><?php echo $student->email;?></a>
                               </td>
                             </tr>
                           </tbody>

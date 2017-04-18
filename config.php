@@ -15,6 +15,10 @@ $config = array
 		// Timeout for hver form i sekunder
 		'Token_timeout' => 1200
 	),
+	'lists' => array
+	(
+		'per_page' => 50
+	),
 	'debug' => true,
 );
 

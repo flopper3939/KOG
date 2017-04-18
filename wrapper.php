@@ -17,6 +17,7 @@ require_once('db.php');
 require_once('tools.php');
 require_once('objectModel.php');
 require_once('context.php');
+require_once('state.php');
 require_once('student.php');
 require_once('login.php');
 require_once('education.php');

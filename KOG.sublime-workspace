@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"PARAM",
+				"PARAM_INT"
+			],
+			[
+				"st",
+				"stmt"
+			],
+			[
+				"page",
+				"pagelink"
+			],
+			[
+				"pag",
+				"page"
+			],
+			[
+				"PARA",
+				"PARAM_STR"
+			],
+			[
+				"mysql_esac",
+				"mysql_real_escape_string"
+			],
+			[
+				"fie",
+				"fields"
+			],
+			[
+				"pa",
+				"page"
+			],
+			[
+				"_",
+				"_SQL_PREFIX_"
+			],
+			[
+				"to",
+				"total"
+			],
+			[
 				"wid",
 				"width"
 			],
@@ -30,10 +70,6 @@
 			[
 				"for",
 				"foreach\tforeach …"
-			],
-			[
-				"to",
-				"toRemove"
 			],
 			[
 				"arra",
@@ -92,135 +128,10 @@
 	"buffers":
 	[
 		{
-			"file": "index.php",
+			"contents": "#!/usr/bin/env python\n# -*- coding: utf-8 -*-\n\nimport xlsxwriter\nimport time\nimport datetime\nfrom isoweek import Week\nimport mysql.connector\nfrom mysql.connector import errorcode\n\n\nclass Elev(object):\n  logs = {}\n  def __init__(self, name, logs):\n    self.name = name\n    self.logs = {\n      'Mandag' : [],\n      'Tirsdag' : [],\n      'Onsdag' : [],\n      'Torsdag' : [],\n      'Fredag' : []\n    }\n\n\nclass log(object):\n    def __init__(self, name, time, day, date):\n      self.name = name\n      self.time = time\n      self.day = day\n      self.date = date\ndef switchm(stri):\n  month = stri[0] + stri[1]\n  sep = '/'\n  date = stri[3] + stri[4]\n  return date + sep + month\n\nserver = \"192.168.112.124\"\nuser = \"MASuser\"\npassword = \"g-9V]jRS<T7dP3Fb\"\nDB = \"MAS\"\n\ntry:\n  cnx = mysql.connector.connect(user=user, password=password,\n                              host=server,\n                              database=DB)\nexcept mysql.connector.Error as err:\n  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:\n    print(\"Something is wrong with your user name or password\")\n  elif err.errno == errorcode.ER_BAD_DB_ERROR:\n    print(\"Database does not exist\")\n  else:\n    print(err)\nelse:\n  cursor = cnx.cursor()\n\n\nusrlst = []\nmulti = {}\n\nquery = (\"SELECT Navn FROM User ORDER BY Navn ASC\")\n\ncursor.execute(query)\n\nrow = cursor.fetchone()\nwhile row is not None:\n  multi[''.join(row).encode('UTF-8')] = Elev(''.join(row).encode('UTF-8'), {})\n  row = cursor.fetchone()\n\n\n\n\n\nquery = (\"SELECT * FROM logs\")\ncursor.execute(query)\n\nrow = cursor.fetchone()\nwhile row is not None:\n  if row[1].encode('UTF-8') in multi:\n   multi[''.join(row[1].encode('UTF-8'))].logs[''.join(row[3].encode('UTF-8'))].append(log(row[1], datetime.datetime.strptime(str(row[2]), \"%H:%M:%S\"), row[3], row[4]))\n  else:\n    pass\n  row = cursor.fetchone()\n\n\n\n\n\nquery = (\"DELETE FROM logs\")\n#Disabled for debug mode\ncursor.execute(query)\nrow = cursor.fetchone()\nwhile row is not None:\n  row = cursor.fetchone()\n\ncnx.commit();\ncursor.close()\ncnx.close()\n\n\n\nwith xlsxwriter.Workbook('/mnt/WinShare/ugeTest ' + str(datetime.date.today().isocalendar()[1]) + '.xlsx') as workbook:\n  worksheet = workbook.add_worksheet()\n  bold = workbook.add_format({'bold': True})\n  worksheet.protect('Password1')\n  row = 1\n  col = 0\n\n\n  worksheet.set_column(0, 0, 40)\n\n\n  format_bold = workbook.add_format({'bold': True, 'bg_color': '#99d6ff'})\n  format_blue = workbook.add_format({'bg_color': '#99d6ff'})\n  format_red = workbook.add_format({'bg_color': 'red'})\n  format_gray = workbook.add_format({'bg_color': 'gray'})\n  format_green = workbook.add_format({'bg_color': 'green'})\n  format_yellow = workbook.add_format({'bg_color': 'yellow'})\n  \n  d = Week(datetime.date.today().year, datetime.date.today().isocalendar()[1])\n\n\n\n  worksheet.merge_range('A1:A2', \"Uge:  \" + str(datetime.date.today().isocalendar()[1]), format_bold)\n  worksheet.merge_range('B1:B2', 'Mandag - ' + switchm(str(d.monday())[5:10]), format_bold)\n  worksheet.merge_range('C1:C2', 'Tirsdag - ' + switchm(str(d.tuesday())[5:10]), format_bold)\n  worksheet.merge_range('D1:D2', 'Onsdag - ' + switchm(str(d.wednesday())[5:10]), format_bold)\n  worksheet.merge_range('E1:E2', 'Torsdag - ' + switchm(str(d.thursday())[5:10]), format_bold)\n  worksheet.merge_range('F1:F2', 'Fredag - ' + switchm(str(d.friday())[5:10]), format_bold)\n  \n  row += 1\n\n  for row1 in range(2, len(multi) + 2):\n    for col1 in range(1, 6):\n      worksheet.write(row1, col1, \"Ikke m\" + unichr(248) + \"dt!\", format_gray)\n\n  for key in multi:\n    worksheet.write(row, 0, unicode(multi[key].name, 'utf-8'), format_bold)\n    row += 1\n    col = 0\n    for key1 in multi[key].logs:\n      print key1\n      if multi[key].logs[key1] == multi[key].logs['Mandag']:\n        col = 1\n      if multi[key].logs[key1] == multi[key].logs['Tirsdag']:\n        col = 2\n      if multi[key].logs[key1] == multi[key].logs['Onsdag']:\n        col = 3\n      if multi[key].logs[key1] == multi[key].logs['Torsdag']:\n        col = 4\n      if multi[key].logs[key1] == multi[key].logs['Fredag']:\n        col = 5\n      if len(multi[key].logs[key1]) == 2:\n        if len(multi[key].logs[key1]) == 2 and multi[key].logs[key1][0].time < datetime.datetime.strptime(\"09:00:00\", \"%H:%M:%S\") and multi[key].logs[key1][1].time > datetime.datetime.strptime(\"15:00:00\", \"%H:%M:%S\"):\n          worksheet.write(row - 1, col, str(multi[key].logs[key1][0].time.strftime(\"%H:%M:%S\")) + \" - \" + str(multi[key].logs[key1][1].time.strftime(\"%H:%M:%S\")), format_green)\n        elif len(multi[key].logs[key1]) == 2 and multi[key].logs[key1][0].time > datetime.datetime.strptime(\"09:00:00\", \"%H:%M:%S\") or multi[key].logs[key1][1].time < datetime.datetime.strptime(\"15:00:00\", \"%H:%M:%S\"):\n          worksheet.write(row - 1, col, str(multi[key].logs[key1][0].time.strftime(\"%H:%M:%S\")) + \" - \" + str(multi[key].logs[key1][1].time.strftime(\"%H:%M:%S\")), format_red)\n        elif len(multi[key].logs[key1]) == 2:\n          worksheet.write(row - 1, col, str(multi[key].logs[key1][0].time.strftime(\"%H:%M:%S\")), format_red)\n      else:\n        if len(multi[key].logs[key1]) == 0:\n          pass\n        elif len(multi[key].logs[key1]) == 1:\n          worksheet.write(row - 1, col, str(multi[key].logs[key1][0].time.strftime(\"%H:%M:%S\")) + \" -\", format_red)\n        elif len(multi[key].logs[key1]) > 2:\n          stri = \"\"\n          for log in multi[key].logs[key1]:\n            stri += str(log.time.strftime(\"%H:%M:%S\")) + \" - \"\n          worksheet.write(row - 1, col, stri, format_yellow)\nprint('Done writing to: SharedData/fravaer/dev_uge ' + str(datetime.date.today().isocalendar()[1]) + 'test.xlsx')",
 			"settings":
 			{
-				"buffer_size": 70,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "classes/CSRF.php",
-			"settings":
-			{
-				"buffer_size": 2149,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "classes/db.php",
-			"settings":
-			{
-				"buffer_size": 1662,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "ajax/updatePassword.php",
-			"settings":
-			{
-				"buffer_size": 306,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "pages/profile.php",
-			"settings":
-			{
-				"buffer_size": 5761,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "pages/homepage.php",
-			"settings":
-			{
-				"buffer_size": 71,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "css/override.css",
-			"settings":
-			{
-				"buffer_size": 206,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "controller.php",
-			"settings":
-			{
-				"buffer_size": 3388,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "functions.php",
-			"settings":
-			{
-				"buffer_size": 959,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "classes/student.php",
-			"settings":
-			{
-				"buffer_size": 621,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "classes/objectModel.php",
-			"settings":
-			{
-				"buffer_size": 2615,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "menu.php",
-			"settings":
-			{
-				"buffer_size": 540,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "pages/searchStudents.php",
-			"settings":
-			{
-				"buffer_size": 777,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/X/DB Projekt/Check Card før 7 efter 17.php",
-			"settings":
-			{
-				"buffer_size": 8711,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": ".htaccess",
-			"settings":
-			{
-				"buffer_size": 223,
-				"encoding": "UTF-8",
+				"buffer_size": 5617,
 				"line_ending": "Windows"
 			}
 		}
@@ -265,26 +176,42 @@
 		"/C/xampp/htdocs",
 		"/C/xampp/htdocs/ajax",
 		"/C/xampp/htdocs/classes",
-		"/C/xampp/htdocs/forms"
+		"/C/xampp/htdocs/forms",
+		"/C/xampp/htdocs/pages",
+		"/C/xampp/htdocs/pages/admin"
 	],
 	"file_history":
 	[
+		"/C/xampp/htdocs/classes/objectModel.php",
+		"/C/xampp/htdocs/pages/searchStudents.php",
+		"/C/xampp/htdocs/forms/update_student.php",
+		"/C/xampp/htdocs/classes/db.php",
+		"/C/xampp/htdocs/functions.php",
+		"/C/xampp/htdocs/classes/student.php",
+		"/C/xampp/htdocs/classes/education.php",
+		"/C/xampp/htdocs/hash/index.php",
+		"/C/xampp/htdocs/menu.php",
+		"/C/xampp/htdocs/controller.php",
+		"/C/xampp/htdocs/pages/flex.php",
+		"/C/xampp/htdocs/index.php",
+		"/C/xampp/htdocs/classes/education",
+		"/C/xampp/htdocs/wrapper.php",
+		"/C/xampp/htdocs/classes/CSRF.php",
+		"/C/xampp/htdocs/ajax/updatePassword.php",
+		"/C/xampp/htdocs/pages/profile.php",
+		"/C/xampp/htdocs/pages/homepage.php",
+		"/C/xampp/htdocs/css/override.css",
+		"/C/xampp/htdocs/constants.php",
+		"/X/DB Projekt/Check Card før 7 efter 17.php",
+		"/C/xampp/htdocs/.htaccess",
+		"/C/xampp/htdocs/classes/tools.php",
+		"/C/xampp/htdocs/js/pagination.js",
 		"/C/xampp/htdocs/pages/mysite.php",
 		"/C/Users/jokr.skp/AppData/Roaming/Sublime Text 3/Packages/User/Xdebug.sublime-settings",
-		"/C/xampp/htdocs/index.php",
 		"/C/xampp/htdocs/forms/login.php",
-		"/C/xampp/htdocs/classes/db.php",
-		"/C/xampp/htdocs/ajax/updatePassword.php",
-		"/C/xampp/htdocs/wrapper.php",
-		"/C/xampp/htdocs/forms/update_student.php",
-		"/C/xampp/htdocs/classes/student.php",
-		"/C/xampp/htdocs/classes/objectModel.php",
-		"/C/xampp/htdocs/controller.php",
-		"/C/xampp/htdocs/classes/CSRF.php",
 		"/C/xampp/htdocs/info.php",
 		"/C/xampp/php/php.ini",
 		"/C/xampp/htdocs/pages/testside.php",
-		"/C/xampp/htdocs/menu.php",
 		"/C/xampp/htdocs/adminmenu.php",
 		"/C/xampp/htdocs/pages/admin/CreateStudent.php",
 		"/C/xampp/htdocs/pages/admin/adminCreateStudent.php",
@@ -292,13 +219,10 @@
 		"/C/xampp/htdocs/sql.php",
 		"/C/xampp/htdocs/pages/login.php",
 		"/C/xampp/htdocs/db.php",
-		"/C/xampp/htdocs/constants.php",
 		"/C/xampp/htdocs/pages/admin/CreateNewStudent.php",
 		"/C/xampp/htdocs/forms/resetpassword.php",
 		"/C/xampp/htdocs/pages/forgotPassword.php",
 		"/C/xampp/htdocs/ajax/resetPassword.php",
-		"/C/xampp/htdocs/.htaccess",
-		"/C/xampp/htdocs/functions.php",
 		"/C/xampp/htdocs/classes/Context.php",
 		"/C/xampp/htdocs/lib/jquery-3.1.1.min.js",
 		"/C/xampp/htdocs/CSRF.php",
@@ -306,13 +230,12 @@
 		"/C/xampp/htdocs/pages/admin/admin1.php",
 		"/C/xampp/htdocs/pages/admin/admin2.php",
 		"/C/xampp/htdocs/classes/login.php",
-		"/C/xampp/htdocs/classes/tools.php",
 		"/C/xampp/htdocs/lib/sidebar/sidebar-collapse.css",
 		"/C/xampp/htdocs/errors/404.php"
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -326,10 +249,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"ackground-color: green;color:white;text-align: center;\"></td>",
+			"$page",
+			"page",
+			"`",
 			"$flex"
 		],
 		"highlight": true,
-		"in_selection": true,
+		"in_selection": false,
 		"preserve_case": false,
 		"regex": false,
 		"replace_history":
@@ -344,437 +271,36 @@
 	"groups":
 	[
 		{
-			"selected": 13,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "index.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 70,
+						"buffer_size": 5617,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5,
-								5
+								3686,
+								3686
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "classes/CSRF.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2149,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								336,
-								336
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 14.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "classes/db.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1662,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								744,
-								750
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "ajax/updatePassword.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 306,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								139,
-								139
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "pages/profile.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5761,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4154,
-								4228
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 664.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "pages/homepage.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 71,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								61,
-								61
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "css/override.css",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 206,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								144,
-								144
-							]
-						],
-						"settings":
-						{
-							"auto_name": "",
-							"syntax": "Packages/CSS/CSS.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "controller.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3388,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1290,
-								1290
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "functions.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 959,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								274,
-								394
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "classes/student.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 621,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								260,
-								260
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "classes/objectModel.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2615,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1769,
-								1769
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "menu.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 540,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								533,
-								533
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "pages/searchStudents.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 777,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								613,
-								613
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "/X/DB Projekt/Check Card før 7 efter 17.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8711,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 4770.0,
+						"translation.y": 1099.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": ".htaccess",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 223,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								168,
-								168
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
 					"type": "text"
 				}
 			]
@@ -870,20 +396,65 @@
 			"hide_conflict": false,
 			"restore_index":
 			{
-				"24":
+				"42":
 				{
 					"group": 0,
 					"index": 0
 				},
-				"25":
+				"43":
+				{
+					"group": 0,
+					"index": 5
+				},
+				"46":
+				{
+					"group": 0,
+					"index": 6
+				},
+				"48":
+				{
+					"group": 0,
+					"index": 4
+				},
+				"49":
+				{
+					"group": 0,
+					"index": 3
+				},
+				"50":
+				{
+					"group": 0,
+					"index": 2
+				},
+				"52":
+				{
+					"group": 0,
+					"index": 7
+				},
+				"54":
 				{
 					"group": 0,
 					"index": 1
 				},
-				"26":
+				"55":
 				{
 					"group": 0,
-					"index": 2
+					"index": 8
+				},
+				"61":
+				{
+					"group": 0,
+					"index": 9
+				},
+				"62":
+				{
+					"group": 0,
+					"index": 10
+				},
+				"63":
+				{
+					"group": 0,
+					"index": 11
 				}
 			},
 			"restore_layout":
