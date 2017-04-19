@@ -7,7 +7,7 @@ if ($CSRF != 1) {
 	echo 2;
 	die();
 }
-$password = tools::getValue('password');
-$context->student->updatePassword($password);
-echo 1;
-
+$new_state = tools::getValue("id_state");
+$success = $context->student->changeState($new_state);
+echo json_encode(($success ? 1 : 0));
+?>

@@ -33,14 +33,35 @@ class student extends objectModel
 	public $education;
 	public $active;
 	public $email;
+	private $state;
 
 	public function getState() {
-		$sql = 'SELECT new_state FROM '._SQL_PREFIX_.'log l1 WHERE l1.id_student = ? && l1.date_upd = (SELECT MAX(l1.date_upd) FROM '._SQL_PREFIX_.'log l2 WHERE l1.id_student = ?)';
+		if ($this->state) {
+			return $this->state;
+		}
+		$sql = 'SELECT new_state FROM '._SQL_PREFIX_.'log WHERE id_student = ? ORDER BY date_add DESC';
 		//dnd($sql);
 		$params = array($this->id_student, $this->id_student);
-		return new state(Database::selectRow($sql, $params)['new_state']);
+		$this->state = new state(Database::selectRow($sql, $params)['new_state']);
+		return $this->state;
 	}
+	public function changeState($state_id) {
+		if (!isset($state_id) || empty($state_id) || !is_numeric($state_id))
+			return false;
+		$current_state = $this->getState();
+		$options = $current_state->getOptions();
+		foreach ($options as $value) {
+			if ($value->id_state == $state_id) {
+				// Valid transition. Change state and return
+				$sql = 'INSERT INTO '._SQL_PREFIX_.'log (id_student, new_state) VALUES (?, ?)';
+				$params = array($this->id_student, $state_id);
+				Database::insert($sql, $params);
+				return true;
+			}
+		}
+		return false;
 
+	}
 	public function updatePassword($password) {
 		$password_hash = password_hash($password, PASSWORD_DEFAULT);
 		$sql = "UPDATE "._SQL_PREFIX_."logins SET password=? WHERE id_student = ?";

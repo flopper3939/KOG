@@ -14,6 +14,7 @@ $menu = array
 	'Fravær' => array 
 	(
 		array('pagename' => 'Mit flex', 'pagelink' => 'flex'),
+		array('pagename' => 'Ændre status', 'pagelink' => 'stateChanger'),
 		array('pagename' => 'Bibliotek aftaler', 'pagelink' => 'libary'),
 		array('pagename' => 'test', 'pagelink' => 'testside')
 	)

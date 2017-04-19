@@ -12,6 +12,8 @@ class state extends objectModel
 			'id_state',
 			'state_text',
 			'state_color_hex',
+			'state_color_text',
+			'illegal'
 		)
 	);
 	public function getOptions() {
@@ -27,5 +29,7 @@ class state extends objectModel
 
 	public $state_text;
 	public $state_color_hex;
+	public $state_color_text;
+	public $illegal;
 }
 ?>

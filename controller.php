@@ -71,7 +71,33 @@ unset($_SESSION['CTRF_ERROR']);
 		}
 		echo generate_header($menu, $context);
 		echo '
+		<div class="header">
+			<div class="row" style="height:100%;">
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 header-column">
+					<div class="header-blocks">
+						<div class="header-status-block">
+							<span class="fa fa-user-circle fa-3x header-status" aria-hidden="true" style="background-color:#'.$context->student->getState()->state_color_hex.';"> Status - '.$context->student->getState()->state_text.'</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 header-column">
+				
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 header-column">
+					<div class="header-blocks">
+						<span class="fa fa-clock-o fa-3x time" aria-hidden="true"></span>
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+		</div>';
+		echo '
 		<div class="main-content">';
+
 	}
 		// REQUIRE LOGIN
 
@@ -102,6 +128,28 @@ unset($_SESSION['CTRF_ERROR']);
 		if ($context->logged_in) {
 		?>
 		<script type="text/javascript">
+			var ST = <?php echo time(); ?>;
+			var LT = +Date.now();
+			var TD = ST * 1000 - LT;
+
+			// Only for initialzing
+			var CT1 = new Date(Date.now() + TD);
+			$(".time").html(" " + CT1.toTimeString().split(' ')[0]);
+
+			setInterval(function () {
+				var CT = new Date(Date.now() + TD);
+				$(".time").html(" " + CT.toTimeString().split(' ')[0]);
+			}, 1000);
+
+			setInterval(function () {
+				$.post( "/ajax/getTime.php", function( data ) {
+					ST = data;
+					LT = +Date.now();
+					TD = ST * 1000 - LT;
+				});
+				// Millisekunder gange sekunder gange minutter
+			}, 1000*60*15)
+
 			$(function () {
 				var links = $('.sidebar-links > div');
 				links.on('click', function () {

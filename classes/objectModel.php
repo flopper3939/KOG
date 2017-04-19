@@ -77,6 +77,10 @@ abstract class objectModel
 	public function setActive() {
 		Database::update('UPDATE '._SQL_PREFIX_.get_class($this).' SET active=1 WHERE '.$this->structure['id'].'=?', array($this->id));
 	}
+	public function __toString() {
+		// Need to use get_object_vars since it will loop back into the same function if not.
+		return (string)var_dump(get_object_vars($this));
+	}
 
 }
 ?>

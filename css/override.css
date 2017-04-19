@@ -10,8 +10,66 @@ body {
 	max-width: none;
 	height: 100%;
 	margin: 0 80px 0px 260px;
+	padding-top: 60px;
+}
+@media (max-width: 900px) {
+	.main-content { 
+		margin: 0 0 0 0;
+	}
+	.header {
+		display: none;
+	}
 }
 .container-full {
-  margin: 0 auto;
-  width: 100%;
+	margin: 0 auto;
+	width: 100%;
+}
+.btn-state-change {
+	margin: 10px;
+	font-size: 3vmin;
+}
+.btn-state-change:hover {
+	opacity: 0.5;
+}
+.btn-state-change:focus {
+	outline: none;
+}
+.header {
+	background-color: rgba(128,128,128,0.5);
+	height: 50px;
+	float:right;
+	width: calc(100% - 180px);
+}
+.header .row {
+	margin: 0;
+}
+.header-column {
+	height: 100%;
+	padding: 0;
+}
+.header-blocks {
+	color:white;
+	display: table;
+	height: 100%;
+	width: 100%;
+}
+.header-blocks span {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+}
+.header-status {
+	border-radius: 20px;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.header-status {
+	font-size: 2.5vw;
+}
+.header-status-block span {
+	padding: 0 20px 0px 20px;
+    display: inline-block;
+}
+.header-status-block {
+	text-align: center;
 }

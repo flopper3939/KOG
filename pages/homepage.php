@@ -1,3 +1,3 @@
 <?php
-	dnd($context->student->getState());
+	echo $context->student->getState();
 ?>
