@@ -73,3 +73,54 @@ body {
 .header-status-block {
 	text-align: center;
 }
+.colorpicker:before {
+	border-left: 0; 
+    border-right: 0; 
+    border-bottom: 0 ;
+}
+.colorpicker.pull-right {
+	width: 70%;
+}
+.row.change-state {
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.row.change-state .colorpicker {
+	width: 100%;
+	margin-right: auto;
+}
+.row.change-state label {
+	text-align: right;
+	margin-left: auto;
+	margin-bottom: 0;
+}
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}
+.state-change-name {
+	display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+.state-change-name input {
+	align-self: center;
+}
+.state-change-name button {
+    height: 50%;
+    align-self: center;
+    width: 70%;
+}
+.state-change-name input[type=radio] {
+    height: 18px;
+
+}
+.state-change-name label {
+    white-space: nowrap;
+    align-self: center;
+    
+}

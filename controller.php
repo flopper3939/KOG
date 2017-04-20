@@ -39,12 +39,21 @@ if (tools::getValue('tk') != '')
 		<!-- Menu Theme -->
 		<link rel="stylesheet" href="/lib/sidebar/sidebar-collapse.css">
 
-		<!-- Override CSS -->
-		<link rel="stylesheet" href="/css/override.css">
-
 		<!-- Pagenation -->
 		<script type="text/javascript" src="/lib/Pagination/jquery.simplePagination.js"></script>
 		<link rel="stylesheet" href="/lib/Pagination/simplePagination.css">
+
+		<!-- Custom JS -->
+		<script type="text/javascript" src="/js/custom.js"></script>
+
+		<!-- Bootstrap color picker -->
+		<link href="/lib/bootstrap-colorpicker-master/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+		<script src="/lib/bootstrap-colorpicker-master/dist/js/bootstrap-colorpicker.js"></script>
+
+		<!-- Override CSS -->
+		<link rel="stylesheet" href="/css/override.css">
+
+
 
 		<title><?php echo $title;?></title>
 	</head>

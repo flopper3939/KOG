@@ -16,7 +16,7 @@ class state extends objectModel
 			'illegal'
 		)
 	);
-	public function getOptions() {
+	public function getOptions($bypass = false) {
 		$sql = 'SELECT id_to_state FROM '._SQL_PREFIX_.'state_transition WHERE id_from_state = ?';
 		$params = array ($this->id_state);
 		$result = Database::select($sql, $params);
