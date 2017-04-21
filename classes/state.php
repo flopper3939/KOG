@@ -2,8 +2,6 @@
 
 class state extends objectModel 
 {
-
-	public $id_state;
 	public $structure = array
 	(
 		'id' => 'id_state',
@@ -16,6 +14,13 @@ class state extends objectModel
 			'illegal'
 		)
 	);
+	
+	public $state_text;
+	public $state_color_hex;
+	public $state_color_text;
+	public $illegal;
+	public $id_state;
+
 	public function getOptions($bypass = false) {
 		$sql = 'SELECT id_to_state FROM '._SQL_PREFIX_.'state_transition WHERE id_from_state = ?';
 		$params = array ($this->id_state);
@@ -27,9 +32,15 @@ class state extends objectModel
 		return $states;
 	}
 
-	public $state_text;
-	public $state_color_hex;
-	public $state_color_text;
-	public $illegal;
+	public static function getAllState() {
+		$sql = 'SELECT id_state FROM '._SQL_PREFIX_.'state';
+		$params = array();
+		$result = Database::select($sql, $params);
+		$arrToReturn = array();
+		foreach ($result as $value) {
+			array_push($arrToReturn, new state($value['id_state']));
+		}
+		return $arrToReturn;
+	}
 }
 ?>

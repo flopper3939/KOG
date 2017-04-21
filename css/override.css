@@ -97,10 +97,7 @@ body {
 	margin-bottom: 0;
 }
 .row-eq-height {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display:         flex;
+  display:flex;
 }
 .state-change-name {
 	display: flex;
@@ -115,12 +112,49 @@ body {
     align-self: center;
     width: 70%;
 }
-.state-change-name input[type=radio] {
-    height: 18px;
-
+.state-change-name input[type=checkbox] {
+    height: 20px;
+    width: 20px;
+    margin-right: auto;
 }
 .state-change-name label {
     white-space: nowrap;
     align-self: center;
-    
+    margin-bottom: 0;
+    margin-left: auto;
+}
+.list-group.main-state {
+	max-height: 20vh;
+    overflow-y: auto;
+    border: gray;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(99,99,99, .5);
+}
+.temp-hidden {
+	display: none;
+}
+.dow {
+	text-align: center;
+	display: table-cell;
+}
+.dow input{
+	margin:auto!IMPORTANT;
+	position: relative!IMPORTANT;
+}
+.rule-list-item {
+	border-right-width: 0;
+	width: 95%!IMPORTANT;
+	display: inline;
+}
+.delete-rule {
+	border-left-width: 0;
+	width: 5%!IMPORTANT;
+	display: inline;
+	box-sizing:border-box;
+}
+.delete-rule:hover {
+	background-color: red!IMPORTANT;
+	opacity: 0.5;
+	box-sizing:border-box;
 }
