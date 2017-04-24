@@ -50,6 +50,10 @@ if (tools::getValue('tk') != '')
 		<link href="/lib/bootstrap-colorpicker-master/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
 		<script src="/lib/bootstrap-colorpicker-master/dist/js/bootstrap-colorpicker.js"></script>
 
+		<!-- DatePicker for Bootstrap -->
+		<link href="/lib/datepicker/css/datepicker.css" rel="stylesheet">
+		<script src="/lib/datepicker/js/bootstrap-datepicker.js"></script>
+
 		<!-- Override CSS -->
 		<link rel="stylesheet" href="/css/override.css">
 

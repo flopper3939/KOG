@@ -135,7 +135,9 @@ $states = state::getAllState();
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							controlls here
+								<input type="text">
+								<input type="text">
+								<button type="button" class="btn btn-primary">Save</button>
 							</div>
 						</div>
 					</div>

@@ -158,3 +158,8 @@ body {
 	opacity: 0.5;
 	box-sizing:border-box;
 }
+.list-group.day-1.day-rules-list button {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+
+}
